@@ -1,7 +1,7 @@
 <template>
 <div class="goods-item" @click="goodsClick">
   <!-- 监听图片是否加载完，加载完刷新scroll height -->
-  <img :src="goodsItem.show.img" alt="" @load="imgLoad">
+  <img :src="showImage" alt="" @load="imgLoad">
   <!-- src要动态绑定值 -->
   <!-- <img :src="goodsItem.show.img" alt=""> -->
   <div class="goods-info">
@@ -21,6 +21,11 @@ export default {
       default() {
         return {}
       }
+    }
+  },
+  computed: {
+  	showImage() {
+    	return this.goodsItem.img || this.goodsItem.image || this.goodsItem.show.img
     }
   },
   methods: {

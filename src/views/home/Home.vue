@@ -37,7 +37,8 @@ import HomeSwiper from "./childComponents/HomeSwiper";
 import RecommendView from "./childComponents/RecommendView";
 import FeatureView from "./childComponents/FeatureView";
 
-import { debounce } from "common/utils";
+// import { debounce } from "common/utils";
+import { itemListenerMixin } from "common/mixin";
 
 import {
   getHomeMultidata,
@@ -56,6 +57,7 @@ import {
       Scroll,
       BackTop
     },
+    mixins: [itemListenerMixin],
     data() {
       return {
         // result: null,
@@ -70,7 +72,8 @@ import {
         isShowBackTop: false,
         tabOffsetTop: 0,
         isTabFixed: false,
-        saveY: 0
+        saveY: 0,
+
       }
     },
     computed: {
@@ -90,6 +93,7 @@ import {
     },
     deactivated() {
       this.saveY = this.$refs.scroll.getScrollY()
+      this.$bus.$off('itemImgLoad', this.itemImageListener)
     },
     // 组件创建完会执行的生命周期函数
     created() {
@@ -106,13 +110,18 @@ import {
     mounted() {
       // 1.监听Item中图片加载完成
       // refresh后面不能带小括号，带小括号会立即执行穿进去的是函数执行的结果
-      const refresh = debounce(this.$refs.scroll.refresh, 50)
-      this.$bus.$on('itemImgLoad', () => {
-      // console.log('-------');
-      // 刷新
-      // this.$refs.scroll && this.$refs.scroll.refresh()
-      refresh()
-      })
+      // const refresh = debounce(this.$refs.scroll.refresh, 50)
+      // this.itemImageListener = () => {
+      //   refresh()
+      // }
+      // this.$bus.$on('itemImgLoad', this.itemImageListener)
+
+      // this.$bus.$on('itemImgLoad', () => {
+      // // console.log('-------');
+      // // 刷新
+      // // this.$refs.scroll && this.$refs.scroll.refresh()
+      // refresh()
+      // })
 
     },
 

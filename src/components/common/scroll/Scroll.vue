@@ -9,11 +9,16 @@
 
 <script>
 import BScroll from '@better-scroll/core'
+import ObserveDOM from '@better-scroll/observe-dom'
 // a.导入上拉加载插件
 import PullUp from '@better-scroll/pull-up'
+// 导入图片加载插件
+import ObserveImage from '@better-scroll/observe-image'
 
 // b.注册上拉加载插件
+BScroll.use(ObserveDOM)
 BScroll.use(PullUp)
+BScroll.use(ObserveImage)
 
 export default {
   name: 'Scroll',
@@ -42,8 +47,12 @@ export default {
       click: true,
       probeType: this.probeType,
       // c.使用上拉加载插件
-      pullUpLoad: this.pullUpLoad
+      pullUpLoad: this.pullUpLoad,
+      observeImage: true, // 开启 observe-image 插件
 
+      // observeImage: {
+      // debounceTime: 100 // ms
+      // }
 
     })
 
@@ -84,13 +93,13 @@ export default {
     getScrollY() {
       return this.scroll ? this.scroll.y : 0
     }
-
-
-  }
+  },
 
 }
 </script>
 
-<style>
-
+<style scoped>
+  .wrapper {
+    overflow: hidden;
+  }
 </style>

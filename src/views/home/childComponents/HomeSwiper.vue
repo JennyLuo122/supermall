@@ -1,5 +1,4 @@
 <template>
-<div>
   <swiper>
     <swiper-item v-for = "(item, index) in banners" :key="index">
       <!-- 或者 v-for = "item in banners" :key="item.index -->
@@ -8,7 +7,6 @@
       </a>
     </swiper-item>
   </swiper>
-</div>
 </template>
 
 <script>
