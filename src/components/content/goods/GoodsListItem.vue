@@ -1,7 +1,8 @@
 <template>
 <div class="goods-item" @click="goodsClick">
   <!-- 监听图片是否加载完，加载完刷新scroll height -->
-  <img :src="showImage" alt="" @load="imgLoad">
+  <!-- <img :src="showImage" alt="" @load="imgLoad"> -->
+  <img v-lazy="showImage" alt="" @load="imgLoad">
   <!-- src要动态绑定值 -->
   <!-- <img :src="goodsItem.show.img" alt=""> -->
   <div class="goods-info">

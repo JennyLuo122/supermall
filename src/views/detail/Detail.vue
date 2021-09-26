@@ -19,6 +19,7 @@
 
   <detail-bottom-bar @addToCart="addToCart"/>
 
+  <toast ref="toast"/>
 
 </div>
 </template>
@@ -34,12 +35,15 @@ import DetailCommentInfo from "./childComps/DetailCommentInfo";
 import DetailBottomBar from "./childComps/DetailBottomBar";
 
 import Scroll from "components/common/scroll/Scroll";
+import Toast from 'components/common/toast/Toast'
 
 import GoodsList from 'components/content/goods/GoodsList'
 
 import { itemListenerMixin, backTopMixin } from "common/mixin";
 
 import { getDetail, Goods, Shop, GoodsParam, getRecommend } from "network/detail";
+
+import {mapActions} from 'vuex'
 
 export default {
   name: 'Detail',
@@ -54,6 +58,7 @@ export default {
     GoodsList,
     DetailBottomBar,
     Scroll,
+    Toast
   },
   mixins: [itemListenerMixin, backTopMixin],
   data() {
@@ -111,6 +116,10 @@ export default {
     this.$bus.$off('itemImgLoad', this.itemImageListener)
   },
   methods: {
+    // 直接引用actions内的函数
+    ...mapActions({
+        addCart: 'addToCart'
+      }),
     /**
      * 事件监听
      */
@@ -176,18 +185,19 @@ export default {
       obj.desc = this.goods.desc
       obj.price = this.goods.realPrice
 
-
       // 2.将商品添加到购物车里
       // this.$store.commit('addCart', obj)
-      this.$store.dispatch('addToCart', obj).then(() => {
-	     console.log('加入购物车成功');
-      })
+      // this.$store.dispatch('addToCart', obj).then(() => {
+	    //  console.log('加入购物车成功');
+      // })
+
+      // 3.添加到购物车成功
       // this.$store.dispatch('addToCart', obj).then(() => {
 	    //  this.$toast({message: '加入购物车成功'})
       // })
-      // this.addCart(obj).then(() => {
-	    //   this.$toast({message: '加入购物车成功'})
-      // })
+      this.addCart(obj).then(() => {
+	      this.$toast({message: '加入购物车成功'})
+      })
 	  },
 
     /**
