@@ -4,17 +4,27 @@
     <div class="content">
       <tab-menu :categories="categories"
                 @selectItem="selectItem"/>
-
-      <scroll id="tab-content"
+      <div id="right-content">
+        <tab-control :titles="['综合', '新品', '销量']"
+                  @itemClick="tabClick"
+                  @tabClick="tabClick"
+                  ref="tabcontrol1"
+                  class="tab-control" v-show="isTabFixed"/>
+        <scroll id="tab-content"
               :data="[categoryData]"
-              ref="scroll">
+              ref="scroll"
+              :probe-type="3"
+              @scroll="controlScroll">
         <div>
-          <tab-content-category :subcategories="showSubcategory"/>
+          <tab-content-category :subcategories="showSubcategory" @categoryImageLoad="categoryImageLoad"/>
           <tab-control :titles="['综合', '新品', '销量']"
-                       @itemClick="tabClick"/>
+                       @itemClick="tabClick"
+                       @tabClick="tabClick"
+                       ref="tabcontrol2"/>
           <goods-list :goods="showCategoryDetail"/>
         </div>
-      </scroll>
+        </scroll>
+      </div>
     </div>
   </div>
 </template>
@@ -50,7 +60,9 @@
 		    categories: [],
         categoryData: {
         },
-        currentIndex: -1
+        currentIndex: -1,
+        tabOffsetTop: 0,
+        isTabFixed: false,
       }
     },
     created() {
@@ -119,7 +131,36 @@
        */
       selectItem(index) {
         this._getSubcategories(index)
-      }
+      },
+      tabClick(index) {
+         switch(index) {
+           case 0:
+           this.currentType = 'pop'
+           break;
+           case 1:
+           this.currentType = 'sell'
+           break;
+           case 2:
+           this.currentType = 'new'
+           break;
+         }
+        // 让两个tabcontrol点击保持一致
+        this.$refs.tabcontrol1.currentIndex = index;
+        this.$refs.tabcontrol2.currentIndex = index;
+      },
+      controlScroll(position) {
+        // 决定tabcontrol是否吸顶（position ：fixed）
+        this.isTabFixed = (-position.y) > this.tabOffsetTop
+        console.log(this.isTabFixed,-position.y);
+
+      },
+      categoryImageLoad() {
+        // 组件没有offsetTop属性
+        // $el可以获取组件内的元素
+        this.tabOffsetTop = this.$refs.tabcontrol2.$el.offsetTop
+        console.log(this.tabOffsetTop);
+      },
+
     }
 	}
 </script>
@@ -145,8 +186,12 @@
     display: flex;
   }
 
-  #tab-content {
-    height: 100%;
+  #right-content {
     flex: 1;
   }
+
+  #tab-content {
+    height: 100%;
+  }
+
 </style>
